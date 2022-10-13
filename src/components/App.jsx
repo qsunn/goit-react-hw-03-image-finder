@@ -24,7 +24,7 @@ export class App extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
     const { page, search } = this.state;
 
-    if (page !== 1 && prevState.page !== page) {
+    if (prevState.page !== page && page !== 1) {
       getData(search, page).then(data => {
         this.setState({ images: [...prevState.images, ...data.hits] });
         page >= data.pages && this.toggleButton();
@@ -37,7 +37,7 @@ export class App extends PureComponent {
       getData(search)
         .then(data => {
           this.setState({ images: data.hits });
-          page < data.pages && this.toggleButton();
+          this.state.page < data.pages && this.toggleButton();
         })
         .finally(this.toggleLoader);
     }
