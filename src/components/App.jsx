@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PureComponent } from 'react';
 import { ToastContainer } from 'react-toastify';
 
-import { getData } from './services/api';
+import { getData } from '../services/api';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
