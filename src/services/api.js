@@ -14,7 +14,7 @@ export async function getData(search = '', page = 1, imageType = 'photo', orient
             orientation: orientation,
             per_page: perPage
         }
-    }
+    };
 
     const response = await axios(config);
 
@@ -24,16 +24,14 @@ export async function getData(search = '', page = 1, imageType = 'photo', orient
                 id: item.id,
                 webformatURL: item.webformatURL,
                 largeImageURL: item.largeImageURL
-            }
+            };
         });
-
         const result = {
             pages: Math.ceil(response.data.totalHits / perPage),
             hits: filteredResponse
-        }
-
+        };
         return result;
-    }
+    };
 
     return response;
 }
