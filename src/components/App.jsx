@@ -16,8 +16,9 @@ export class App extends PureComponent {
     images: [],
     page: 1,
     search: '',
+    status: 'idle',
+    error: '',
     showButton: false,
-    showLoader: false,
     modalImageUrl: '',
   };
 
@@ -33,13 +34,22 @@ export class App extends PureComponent {
 
     if (prevState.search !== search) {
       this.reset();
-      this.toggleLoader();
+      this.setState({ status: 'pending' });
       getData(search)
         .then(data => {
-          this.setState({ images: data.hits });
+          return !!data.hits.length
+            ? data
+            : Promise.reject(
+                new Error(`Nothing to found for ${search} search`)
+              );
+        })
+        .then(data => {
+          this.setState({ images: data.hits, status: 'resolved' });
           this.state.page < data.pages && this.toggleButton();
         })
-        .finally(this.toggleLoader);
+        .catch(error =>
+          this.setState({ error: error.message, status: 'rejected' })
+        );
     }
   }
 
@@ -49,31 +59,29 @@ export class App extends PureComponent {
 
   toggleButton = () => this.setState({ showButton: !this.state.showButton });
 
-  toggleLoader = () => this.setState({ showLoader: !this.state.showLoader });
+  toggleLoader = () => this.setState({ status: 'pending' });
 
   toggleModal = (url = '') => this.setState({ modalImageUrl: url });
 
   reset = () => this.setState({ page: 1, showButton: false });
 
   render() {
-    const { images, search, showButton, showLoader, modalImageUrl } =
+    const { images, search, status, error, showButton, modalImageUrl } =
       this.state;
 
     return (
       <div className="App">
         <Searchbar onSubmit={this.onSubmit} />
 
-        {images.length > 0 && !showLoader && (
+        {status === 'resolved' && (
           <ImageGallery images={images} toggleModal={this.toggleModal} />
         )}
 
-        {images.length === 0 && search.length !== 0 && !showLoader && (
-          <NothingFound />
-        )}
+        {status === 'rejected' && <NothingFound message={error} />}
+
+        {status === 'pending' && <Loader />}
 
         {showButton && <Button loadMoreHandler={this.loadMoreHandler} />}
-
-        {showLoader && <Loader />}
 
         {modalImageUrl && (
           <Modal toggleModal={this.toggleModal}>

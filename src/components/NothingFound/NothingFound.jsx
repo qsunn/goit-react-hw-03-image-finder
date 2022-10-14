@@ -4,9 +4,10 @@ import { Component } from 'react';
 
 export class NothingFound extends Component {
   render() {
+    const { message } = this.props;
     return (
       <div className={s.NothingFound}>
-        <p>Nothing found</p>
+        <p>{message}</p>
       </div>
     );
   }
