@@ -16,21 +16,24 @@ export async function getData(search = '', page = 1, imageType = 'photo', orient
         }
     }
 
-    try {
-        const request = await axios(config);
-        const filteredData = request.data.hits.map((item) => {
+    const response = await axios(config);
+
+    if (response.status === 200) {
+        const filteredResponse = response.data.hits.map((item) => {
             return {
                 id: item.id,
                 webformatURL: item.webformatURL,
                 largeImageURL: item.largeImageURL
             }
         });
+
         const result = {
-            pages: Math.ceil(request.data.totalHits / perPage),
-            hits: filteredData
+            pages: Math.ceil(response.data.totalHits / perPage),
+            hits: filteredResponse
         }
+
         return result;
-    } catch (err) {
-        console.log(err.message);
     }
+
+    return response;
 }

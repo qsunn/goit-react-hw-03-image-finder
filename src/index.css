@@ -1,6 +1,5 @@
 html {
   box-sizing: border-box;
-  width: 100vw;
   overflow-x: hidden;
 }
 
@@ -30,5 +29,4 @@ img {
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 16px;
-  padding-bottom: 24px;
 }

@@ -37,10 +37,10 @@ export class App extends PureComponent {
       this.setState({ status: 'pending' });
       getData(search)
         .then(data => {
-          return !!data.hits.length
+          return data?.hits.length
             ? data
             : Promise.reject(
-                new Error(`Nothing to found for ${search} search`)
+                new Error(`Nothing to found for "${search}" search`)
               );
         })
         .then(data => {
